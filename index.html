@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Hot 21 - iPhone 15 Pro Optimized</title>
+    <title>Hot 21 - Luxury Edition</title>
     
     <link rel="manifest" href="manifest.json">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -49,146 +49,150 @@
             touch-action: manipulation;
         }
 
-        /* מסך ראשי עם Safe Area */
-        .app { 
+        /* סגנון כללי למסכים */
+        .screen {
             width: 100%; 
             max-width: 450px; 
             height: 100vh;
             height: 100dvh;
-            padding-top: calc(env(safe-area-inset-top) + 15px); 
-            padding-bottom: calc(env(safe-area-inset-bottom) + 10px);
-            padding-left: 20px;
-            padding-right: 20px;
+            padding: calc(env(safe-area-inset-top) + 20px) 20px calc(env(safe-area-inset-bottom) + 20px) 20px;
             text-align: center; 
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
-            transition: opacity 0.8s ease; 
-            position: relative; 
+            position: fixed;
+            inset: 0;
+            background: var(--bg);
+            z-index: 10;
         }
+
+        /* מסך הבית */
+        #home-screen { z-index: 100; justify-content: center; gap: 30px; }
+        
+        .input-group { display: flex; flex-direction: column; gap: 15px; width: 100%; }
+        input {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            padding: 15px;
+            border-radius: 12px;
+            color: white;
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            text-align: center;
+            text-transform: uppercase;
+        }
+        input:focus { border-color: var(--primary); outline: none; }
+
+        /* כפתורים בעיצוב ה-Deal Cards */
+        button { 
+            padding: 18px; 
+            border-radius: 15px; 
+            border: none; 
+            font-weight: 900; 
+            font-size: 1.2rem; 
+            cursor: pointer; 
+            font-family: 'Montserrat', sans-serif;
+            transition: 0.2s;
+            text-transform: uppercase;
+        }
+        button:active { transform: scale(0.95); }
+        .btn-main { background: var(--primary); color: white; box-shadow: 0 5px 0 #9b1a1a; width: 100%; }
+        .btn-sub { background: white; color: black; box-shadow: 0 5px 0 #ccc; width: 100%; }
+        .btn-outline { background: transparent; border: 2px solid #444; color: #666; font-size: 0.8rem; padding: 10px; margin-top: 10px; }
+
+        /* מסך המשחק (היה .app בקוד הקודם) */
+        #game-screen { display: none; justify-content: space-between; }
         
         .round-counter { 
             position: absolute; 
-            top: calc(env(safe-area-inset-top) + 5px); 
+            top: calc(env(safe-area-inset-top) + 8px); 
             right: 20px; 
             font-size: 0.7rem; 
             color: #555; 
-            letter-spacing: 1px; 
         }
 
-        h1 { font-size: 2.5rem; margin: 0; font-weight: 900; color: white; text-shadow: 0 0 20px rgba(255, 0, 0, 0.6); }
-        .subtitle { color: #555; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 10px; }
+        h1 { font-size: 2.3rem; margin: 0; font-weight: 900; color: white; text-shadow: 0 0 20px rgba(255, 0, 0, 0.6); }
+        .subtitle { color: #555; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 5px; }
 
-        .streak-board { display: flex; justify-content: space-between; margin-bottom: 15px; gap: 10px; }
-        .streak-player { background: var(--card-bg); padding: 15px 5px; border-radius: 20px; border: 2px solid #333; flex: 1; transition: 0.4s; font-size: 1rem; font-weight: 900; color: #666; }
-        .active-player { border-color: var(--gold); color: white; background: #252525; box-shadow: 0 0 15px rgba(255, 215, 0, 0.3); transform: scale(1.02); }
-        
-        .streak-victory { 
-            border-color: var(--win-green) !important; 
-            color: var(--win-green) !important; 
-            box-shadow: 0 0 30px rgba(0, 255, 0, 0.6) !important; 
-            animation: greenPulse 0.4s infinite alternate;
-        }
+        .streak-board { display: flex; justify-content: space-between; margin-bottom: 10px; gap: 10px; }
+        .streak-player { background: var(--card-bg); padding: 12px 5px; border-radius: 20px; border: 2px solid #333; flex: 1; font-size: 0.8rem; color: #666; font-weight: 900; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .active-player { border-color: var(--gold); color: white; background: #252525; }
+        .streak-victory { border-color: var(--win-green) !important; color: var(--win-green) !important; animation: greenPulse 0.4s infinite alternate; }
         @keyframes greenPulse { from { opacity: 1; } to { opacity: 0.7; } }
 
-        .winner-glow { animation: victoryPulse 1s ease-in-out infinite; border-color: var(--victory-red) !important; box-shadow: 0 0 40px rgba(255, 0, 0, 0.7) !important; color: white; }
-        @keyframes victoryPulse { 0%, 100% { transform: scale(1.05); } 50% { transform: scale(1); } }
-
-        .dots { display: flex; gap: 6px; justify-content: center; margin-top: 10px; }
-        .dot { width: 12px; height: 12px; border-radius: 50%; background: #222; border: 1px solid #444; }
-        .dot.filled { background: var(--victory-red); box-shadow: 0 0 12px var(--victory-red); border: none; }
+        .dots { display: flex; gap: 6px; justify-content: center; margin-top: 8px; }
+        .dot { width: 10px; height: 10px; border-radius: 50%; background: #222; border: 1px solid #444; }
+        .dot.filled { background: var(--victory-red); box-shadow: 0 0 10px var(--victory-red); }
 
         .game-area { 
             background: radial-gradient(circle, #2a0000 0%, #000 100%); 
-            padding: 15px 10px; 
-            border-radius: 30px; 
-            border: 2px solid #333; 
-            margin-bottom: 10px; 
-            position: relative;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        .score-tag { display: inline-block; color: var(--gold); font-size: 1.3rem; margin-left: 10px; }
-        
-        .cards-container { 
-            display: flex; 
-            justify-content: center; 
-            min-height: 130px; 
-            margin: 5px 0; 
-            perspective: 1000px; 
-            padding: 10px; 
+            padding: 10px; border-radius: 30px; border: 2px solid #333; 
+            flex-grow: 1; display: flex; flex-direction: column; justify-content: center; margin-bottom: 10px;
         }
 
-        .playing-card { 
-            width: 85px; height: 120px; 
-            background-size: cover; border-radius: 8px; 
-            box-shadow: 0 8px 15px rgba(0,0,0,0.5); 
-            margin: 0 -20px; border: 1px solid #000; 
-            background-color: #fff; opacity: 0;
-            animation: cardFlyIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+        .cards-container { display: flex; justify-content: center; min-height: 120px; perspective: 1000px; padding: 10px; }
+        .playing-card { width: 80px; height: 110px; background-size: cover; border-radius: 8px; margin: 0 -18px; border: 1px solid #000; animation: cardFlyIn 0.5s forwards; }
+        @keyframes cardFlyIn { 0% { transform: translateY(100px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+
+        .status-msg { height: 35px; font-size: 1.1rem; color: var(--gold); font-weight: 900; }
+        .controls { display: flex; flex-direction: column; gap: 10px; }
+
+        /* פופ-אפ חוקים */
+        #rules-modal {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.95);
+            z-index: 1000; padding: calc(env(safe-area-inset-top) + 20px) 30px;
+            flex-direction: column; justify-content: center; text-align: left;
         }
+        #rules-modal h2 { color: var(--gold); text-align: center; }
+        #rules-modal p { font-size: 0.9rem; line-height: 1.6; color: #ccc; text-transform: none; }
+        #rules-modal ul { color: #eee; font-size: 0.85rem; padding-left: 20px; text-transform: none;}
 
-        @keyframes cardFlyIn {
-            0% { transform: translateY(150px) rotate(45deg) scale(0.5); opacity: 0; }
-            100% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; }
-        }
-
-        .status-msg { height: 40px; font-size: 1.2rem; margin: 10px 0; color: var(--gold); font-weight: 900; }
-        
-        .controls { display: flex; flex-direction: column; gap: 10px; padding-bottom: 10px; }
-        button { padding: 18px; border-radius: 15px; border: none; font-weight: 900; cursor: pointer; font-family: 'Montserrat', sans-serif; font-size: 1.2rem; transition: 0.2s; }
-        .btn-main { background: var(--primary); color: white; box-shadow: 0 5px 0 #9b1a1a; }
-        .btn-sub { background: white; color: black; flex: 1; box-shadow: 0 5px 0 #ccc; }
-
-        /* מסך המשימה - עודכן ללא מסגרת אדומה ועם Safe Area */
+        /* מסך משימה */
         #reward-screen { 
-            display: none; position: fixed; inset: 0; background: var(--bg); z-index: 10000; 
-            /* הסרת המסגרת האדומה: */
-            border: none; 
-            flex-direction: column; align-items: center; 
-            justify-content: center; opacity: 0; transition: opacity 0.6s; 
-            padding: 20px;
-            /* הוספת Safe Area למסך המשימה: */
-            padding-top: calc(env(safe-area-inset-top) + 20px);
-            padding-bottom: calc(env(safe-area-inset-bottom) + 20px);
+            display: none; position: fixed; inset: 0; background: var(--bg); z-index: 500; 
+            flex-direction: column; align-items: center; justify-content: flex-start;
+            padding-top: calc(env(safe-area-inset-top) + 40px);
         }
+        #reward-title { font-size: 2.5rem; color: var(--gold); text-shadow: 0 0 25px var(--gold); margin-bottom: 20px; }
+        #timer { font-size: 5rem; font-weight: 900; color: var(--victory-red); margin-bottom: 20px; }
+        #reward-task { font-size: 1.3rem; margin: 30px 0; font-weight: 900; text-align: center; line-height: 1.4; }
 
-        #reward-title { 
-            font-size: 3rem; color: var(--gold); margin-bottom: 10px;
-            text-shadow: 0 0 25px var(--gold); text-align: center;
-        }
-        #reward-task { font-size: 1.4rem; color: white; margin: 20px; font-weight: 900; text-align: center; line-height: 1.2; }
-        #timer { font-size: 5rem; font-weight: 900; color: var(--victory-red); text-shadow: 0 0 20px rgba(255,0,0,0.4); }
-
-        /* מסך החשיפה - הוספת Safe Area */
-        #reveal-container { 
-            position: absolute; inset: 0; background: rgba(0,0,0,0.95); 
-            display: flex; align-items: center; justify-content: center; 
-            z-index: 10010; backdrop-filter: blur(25px); transition: 0.8s;
-            padding-top: env(safe-area-inset-top);
-        }
-        #reveal-btn { background: var(--gold); padding: 25px 40px; border-radius: 20px; font-size: 1.4rem; box-shadow: 0 10px 0 #b8860b; color: black; width: 80%; }
-
-        .balanced-intense-shake { animation: vibe 0.08s infinite alternate, flashPanic 0.15s infinite; }
-        @keyframes vibe { from { transform: translate(-3px, -2px) rotate(-1deg); } to { transform: translate(3px, 2px) rotate(1deg); } }
-        @keyframes flashPanic { 0%, 100% { background: var(--gold); } 50% { background: var(--victory-red); color: white; } }
-        
-        .btn-fall { animation: fallSmooth 0.9s forwards cubic-bezier(0.55, 0.055, 0.675, 0.19); }
-        @keyframes fallSmooth { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(1000px) rotate(45deg); opacity: 0; } }
-
-        #reward-content { display: none; flex-direction: column; align-items: center; opacity: 0; transform: scale(0.8); transition: 0.5s; }
-        .content-show { display: flex !important; opacity: 1 !important; transform: scale(1) !important; }
-
-        .btn-timer-start, .btn-done { padding: 15px 40px; border-radius: 50px; margin-top: 15px; font-size: 1.1rem; width: 80%; }
-        .btn-timer-start { background: var(--victory-red); color: white; box-shadow: 0 6px 0 #9b1a1a; }
-        .btn-done { background: white; color: black; box-shadow: 0 6px 0 #ccc; }
+        #reveal-container { position: absolute; inset: 0; background: rgba(0,0,0,0.95); display: flex; align-items: center; justify-content: center; z-index: 600; backdrop-filter: blur(25px); }
     </style>
 </head>
 <body>
 
-<div class="app" id="main-app">
+<div id="home-screen" class="screen">
+    <div>
+        <h1>HOT 21</h1>
+        <div class="subtitle">STREAK CHALLENGE</div>
+    </div>
+    
+    <div class="input-group">
+        <input type="text" id="p1-name-input" placeholder="PLAYER 1 NAME" maxlength="10">
+        <input type="text" id="p2-name-input" placeholder="PLAYER 2 NAME" maxlength="10">
+    </div>
+
+    <div style="width: 100%;">
+        <button class="btn-main" onclick="startGame()">START PLAY</button>
+        <button class="btn-outline" onclick="toggleRules(true)">HOW TO PLAY?</button>
+    </div>
+</div>
+
+<div id="rules-modal">
+    <h2>GAME RULES</h2>
+    <p>Blackjack is simple: Get closer to 21 than your partner without going over!</p>
+    <ul>
+        <li>Cards 2-10 are face value.</li>
+        <li>J, Q, K are worth 10.</li>
+        <li>Ace is 1 or 11.</li>
+        <li><b>THE TWIST:</b> Win 3 rounds in a row (STREAK) to trigger a "Hot Task".</li>
+        <li>If you lose your streak, your dots reset to zero!</li>
+    </ul>
+    <button class="btn-sub" style="margin-top: 20px;" onclick="toggleRules(false)">GOT IT</button>
+</div>
+
+<div id="game-screen" class="screen">
     <div class="round-counter">ROUNDS: <span id="round-val">0</span></div>
     <div>
         <h1>HOT 21</h1>
@@ -196,15 +200,15 @@
     </div>
 
     <div class="streak-board">
-        <div id="streak-p1" class="streak-player"><span>PLAYER 1</span><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
-        <div id="streak-p2" class="streak-player"><span>PLAYER 2</span><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+        <div id="streak-p1" class="streak-player"><span id="p1-display-name">PLAYER 1</span><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
+        <div id="streak-p2" class="streak-player"><span id="p2-display-name">PLAYER 2</span><div class="dots"><div class="dot"></div><div class="dot"></div><div class="dot"></div></div></div>
     </div>
 
     <div class="game-area">
-        <div style="font-size: 0.7rem; color: #666;">PLAYER 2 <span class="score-tag" id="p2-score">0</span></div>
+        <div style="font-size: 0.7rem; color: #666;"><span id="p2-label">P2</span> <span class="score-tag" id="p2-score">0</span></div>
         <div id="p2-cards" class="cards-container"></div>
         <div style="border-top: 1px solid #222; margin: 10px 40px;"></div>
-        <div style="font-size: 0.7rem; color: #666;">PLAYER 1 <span class="score-tag" id="p1-score">0</span></div>
+        <div style="font-size: 0.7rem; color: #666;"><span id="p1-label">P1</span> <span class="score-tag" id="p1-score">0</span></div>
         <div id="p1-cards" class="cards-container"></div>
         <div id="status" class="status-msg">READY?</div>
     </div>
@@ -212,8 +216,8 @@
     <div class="controls">
         <button id="deal-btn" class="btn-main" onclick="startRound()">DEAL CARDS</button>
         <div id="game-btns" style="display:none; gap:10px; width:100%;">
-            <button id="hit-btn" class="btn-sub" onclick="hit()">HIT</button>
-            <button id="stand-btn" class="btn-sub" onclick="stand()">STAND</button>
+            <button class="btn-sub" onclick="hit()">HIT</button>
+            <button class="btn-sub" onclick="stand()">STAND</button>
         </div>
     </div>
 </div>
@@ -221,21 +225,22 @@
 <div id="reward-screen">
     <div id="reward-title">JACKPOT!</div>
     <div id="reveal-container">
-        <button id="reveal-btn" onclick="executeReveal()">REVEAL YOUR TASK</button>
+        <button id="reveal-btn" onclick="executeReveal()" style="background:var(--gold); padding:25px; border-radius:20px; width:80%;">REVEAL YOUR TASK</button>
     </div>
-    <div id="reward-content">
+    <div id="reward-content" style="display:none; flex-direction:column; align-items:center; width:100%;">
         <div id="reward-task">...</div>
         <div id="timer">00:00</div>
-        <button id="timer-start-btn" class="btn-timer-start" onclick="beginTimer()">START TIMER</button>
-        <button id="done-btn" class="btn-done" style="display:none;" onclick="closeReward()">I'M DONE</button>
+        <button id="timer-start-btn" class="btn-main" onclick="beginTimer()">START TIMER</button>
+        <button id="done-btn" class="btn-sub" style="display:none;" onclick="closeReward()">I'M DONE</button>
     </div>
 </div>
 
 <script>
     const cardBaseURL = "https://deckofcardsapi.com/static/img/";
     const suits = ['H', 'D', 'C', 'S'], vals = ['2','3','4','5','6','7','8','9','0','J','Q','K','A'];
-    let deck = [], p1Hand = [], p2Hand = [], streaks = { p1: 0, p2: 0 }, currentPlayer = 1, gameOver = false, roundWinner = null;
+    let deck = [], p1Hand = [], p2Hand = [], streaks = { p1: 0, p2: 0 }, currentPlayer = 1, gameOver = false;
     let roundCount = 0, currentTimeLeft = 0, rewardInterval;
+    let playerNames = { p1: "PLAYER 1", p2: "PLAYER 2" };
 
     const tasks = [
         { text: "YOUR MISSION IS STANDING DOGGY STYLE (NOT ON BED)!", time: 300 },
@@ -256,10 +261,58 @@
         { text: "YOUR MISSION IS SPANK THE LOSER'S ASS!", time: 60 }
     ];
 
+    function toggleRules(show) {
+        document.getElementById('rules-modal').style.display = show ? 'flex' : 'none';
+    }
+
+    function startGame() {
+        const p1Input = document.getElementById('p1-name-input').value.trim();
+        const p2Input = document.getElementById('p2-name-input').value.trim();
+        
+        if (p1Input) playerNames.p1 = p1Input;
+        if (p2Input) playerNames.p2 = p2Input;
+
+        document.getElementById('p1-display-name').textContent = playerNames.p1;
+        document.getElementById('p2-display-name').textContent = playerNames.p2;
+        document.getElementById('p1-label').textContent = playerNames.p1;
+        document.getElementById('p2-label').textContent = playerNames.p2;
+
+        document.getElementById('home-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'flex';
+    }
+
     function createDeck() { 
         deck = []; 
         suits.forEach(s => vals.forEach(v => deck.push({v, s}))); 
         deck.sort(() => Math.random() - 0.5); 
+    }
+
+    function startRound() {
+        roundCount++; gameOver = false;
+        createDeck();
+        p1Hand = [deck.pop(), deck.pop()];
+        p2Hand = [deck.pop(), deck.pop()];
+        currentPlayer = 1;
+        document.getElementById('deal-btn').style.display = 'none';
+        document.getElementById('game-btns').style.display = 'flex';
+        document.getElementById('status').textContent = `${playerNames.p1}'S TURN`;
+        document.getElementById('p1-cards').innerHTML = '';
+        document.getElementById('p2-cards').innerHTML = '';
+        updateUI();
+    }
+
+    function updateUI() {
+        renderHand('p1', p1Hand);
+        renderHand('p2', p2Hand);
+        document.getElementById('p1-score').textContent = getVal(p1Hand);
+        document.getElementById('p2-score').textContent = getVal(p2Hand);
+        document.getElementById('round-val').textContent = roundCount;
+
+        ['p1', 'p2'].forEach(p => {
+            const el = document.getElementById(`streak-${p}`);
+            el.querySelectorAll('.dot').forEach((d, i) => d.className = i < streaks[p] ? 'dot filled' : 'dot');
+            el.classList.toggle('active-player', !gameOver && ((p === 'p1' && currentPlayer === 1) || (p === 'p2' && currentPlayer === 2)));
+        });
     }
 
     function renderHand(id, hand) {
@@ -271,40 +324,8 @@
                 img.className = 'playing-card';
                 img.style.backgroundImage = `url('${cardBaseURL}${c.v}${c.s}.png')`;
                 img.style.zIndex = i;
-                img.style.animationDelay = `${(i - currentInDom) * 0.15}s`;
                 div.appendChild(img);
             }
-        });
-    }
-
-    function startRound() {
-        if (document.getElementById('deal-btn').disabled) return;
-        roundCount++; gameOver = false; roundWinner = null;
-        createDeck();
-        p1Hand = []; p2Hand = [];
-        document.getElementById('p1-cards').innerHTML = '';
-        document.getElementById('p2-cards').innerHTML = '';
-        p1Hand = [deck.pop(), deck.pop()];
-        p2Hand = [deck.pop(), deck.pop()];
-        currentPlayer = 1;
-        document.getElementById('deal-btn').style.display = 'none';
-        document.getElementById('game-btns').style.display = 'flex';
-        document.getElementById('status').textContent = "PLAYER 1 TURN";
-        updateUI();
-    }
-
-    function updateUI() {
-        renderHand('p1', p1Hand);
-        renderHand('p2', p2Hand);
-        document.getElementById('p1-score').textContent = getVal(p1Hand);
-        document.getElementById('p2-score').textContent = getVal(p2Hand);
-        document.getElementById('round-val').textContent = roundCount;
-        ['p1', 'p2'].forEach(p => {
-            const el = document.getElementById(`streak-${p}`);
-            const dots = el.querySelectorAll('.dot');
-            dots.forEach((d, i) => d.className = i < streaks[p] ? 'dot filled' : 'dot');
-            el.classList.toggle('active-player', (p === 'p1' && currentPlayer === 1 && !gameOver) || (p === 'p2' && currentPlayer === 2 && !gameOver));
-            el.classList.toggle('winner-glow', gameOver && roundWinner === p && streaks[p] < 3);
         });
     }
 
@@ -317,16 +338,16 @@
 
     function hit() {
         if (gameOver) return;
-        const targetHand = currentPlayer === 1 ? p1Hand : p2Hand;
-        targetHand.push(deck.pop());
+        const hand = currentPlayer === 1 ? p1Hand : p2Hand;
+        hand.push(deck.pop());
         updateUI();
-        if (getVal(targetHand) > 21) endRound(currentPlayer === 1 ? 'p2' : 'p1', `${currentPlayer === 1 ? 'P1' : 'P2'} BUST!`);
+        if (getVal(hand) > 21) endRound(currentPlayer === 1 ? 'p2' : 'p1');
     }
 
     function stand() {
         if (currentPlayer === 1) { 
             currentPlayer = 2; 
-            document.getElementById('status').textContent = "PLAYER 2 TURN"; 
+            document.getElementById('status').textContent = `${playerNames.p2}'S TURN`; 
             updateUI(); 
         } else {
             const s1 = getVal(p1Hand), s2 = getVal(p2Hand);
@@ -334,18 +355,18 @@
         }
     }
 
-    function endRound(winner, msg) {
-        gameOver = true; roundWinner = winner;
-        const statusEl = document.getElementById('status');
-        if (winner === 'draw') statusEl.textContent = "DRAW!";
-        else {
-            statusEl.textContent = msg || `PLAYER ${winner === 'p1' ? '1' : '2'} WON!`;
-            streaks[winner === 'p1' ? 'p2' : 'p1'] = 0; streaks[winner]++;
+    function endRound(winner) {
+        gameOver = true;
+        if (winner !== 'draw') {
+            streaks[winner === 'p1' ? 'p2' : 'p1'] = 0;
+            streaks[winner]++;
+            document.getElementById('status').textContent = `${playerNames[winner]} WON!`;
+        } else {
+            document.getElementById('status').textContent = "DRAW!";
         }
         updateUI();
         if (winner !== 'draw' && streaks[winner] === 3) {
             document.getElementById(`streak-${winner}`).classList.add('streak-victory');
-            document.getElementById('deal-btn').disabled = true;
             setTimeout(showReward, 1200);
         } else {
             document.getElementById('deal-btn').style.display = 'block';
@@ -354,41 +375,25 @@
     }
 
     function showReward() {
-        const screen = document.getElementById('reward-screen');
         const task = tasks[Math.floor(Math.random() * tasks.length)];
         currentTimeLeft = task.time;
         document.getElementById('reward-task').textContent = task.text;
-        document.getElementById('timer').textContent = `${Math.floor(task.time/60).toString().padStart(2,'0')}:${(task.time%60).toString().padStart(2,'0')}`;
-        document.getElementById('main-app').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('main-app').style.display = 'none';
-            screen.style.display = 'flex';
-            setTimeout(() => screen.style.opacity = '1', 50);
-        }, 800);
+        document.getElementById('timer').textContent = `${Math.floor(task.time/60).toString().padStart(2,'0')}:00`;
+        document.getElementById('game-screen').style.display = 'none';
+        document.getElementById('reward-screen').style.display = 'flex';
+        document.getElementById('reward-screen').style.opacity = '1';
     }
 
     function executeReveal() {
-        const btn = document.getElementById('reveal-btn');
-        btn.classList.add('balanced-intense-shake');
-        setTimeout(() => {
-            btn.classList.remove('balanced-intense-shake');
-            btn.classList.add('btn-fall');
-            setTimeout(() => {
-                document.getElementById('reveal-container').style.opacity = '0';
-                setTimeout(() => {
-                    document.getElementById('reveal-container').style.display = 'none';
-                    document.getElementById('reward-content').classList.add('content-show');
-                }, 600);
-            }, 300);
-        }, 1800);
+        document.getElementById('reveal-container').style.display = 'none';
+        document.getElementById('reward-content').style.display = 'flex';
     }
 
     function beginTimer() {
         document.getElementById('timer-start-btn').style.display = 'none';
         document.getElementById('done-btn').style.display = 'block';
-        if(rewardInterval) clearInterval(rewardInterval);
         rewardInterval = setInterval(() => {
-            if (--currentTimeLeft < 0) { 
+            if (--currentTimeLeft <= 0) { 
                 clearInterval(rewardInterval); 
                 document.getElementById('timer').textContent = "DONE!"; 
             } else { 
@@ -400,29 +405,17 @@
     function closeReward() {
         clearInterval(rewardInterval);
         streaks = { p1: 0, p2: 0 };
-        roundCount = 0;
-        p1Hand = []; p2Hand = [];
-        gameOver = false;
-        document.getElementById('reward-screen').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('reward-screen').style.display = 'none';
-            document.getElementById('reveal-container').style.display = 'flex';
-            document.getElementById('reveal-container').style.opacity = '1';
-            document.getElementById('reward-content').classList.remove('content-show');
-            document.getElementById('reveal-btn').classList.remove('btn-fall');
-            document.getElementById('timer-start-btn').style.display = 'block';
-            document.getElementById('done-btn').style.display = 'none';
-            document.getElementById('main-app').style.display = 'flex';
-            document.getElementById('deal-btn').style.display = 'block';
-            document.getElementById('deal-btn').disabled = false;
-            document.getElementById('game-btns').style.display = 'none';
-            document.getElementById('status').textContent = 'READY?';
-            document.getElementById('streak-p1').classList.remove('streak-victory', 'winner-glow');
-            document.getElementById('streak-p2').classList.remove('streak-victory', 'winner-glow');
-            document.getElementById('p1-cards').innerHTML = '';
-            document.getElementById('p2-cards').innerHTML = '';
-            setTimeout(() => { document.getElementById('main-app').style.opacity = '1'; updateUI(); }, 50);
-        }, 600);
+        document.getElementById('reward-screen').style.display = 'none';
+        document.getElementById('game-screen').style.display = 'flex';
+        document.getElementById('deal-btn').style.display = 'block';
+        document.getElementById('game-btns').style.display = 'none';
+        document.getElementById('reveal-container').style.display = 'flex';
+        document.getElementById('reward-content').style.display = 'none';
+        document.getElementById('timer-start-btn').style.display = 'block';
+        document.getElementById('done-btn').style.display = 'none';
+        document.getElementById('streak-p1').classList.remove('streak-victory');
+        document.getElementById('streak-p2').classList.remove('streak-victory');
+        updateUI();
     }
 </script>
 </body>

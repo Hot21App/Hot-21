@@ -48,20 +48,17 @@
             overflow: hidden;
             touch-action: manipulation;
             
-            /* שינוי: ביטול בחירת טקסט בכל המשחק */
-            -webkit-user-select: none; /* Safari/iOS */
-            -moz-user-select: none;    /* Firefox */
-            -ms-user-select: none;     /* IE/Edge */
-            user-select: none;         /* Standard */
+            -webkit-user-select: none;
+            -moz-user-select: none;    
+            -ms-user-select: none;     
+            user-select: none;         
         }
 
-        /* מאפשר בחירת טקסט רק בתוך תיבות הקלט (כדי שיוכלו להקליד שמות) */
         input {
             -webkit-user-select: text;
             user-select: text;
         }
 
-        /* Home Screen Styles */
         #home-screen {
             position: fixed; inset: 0; background: var(--bg); z-index: 20000;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -257,6 +254,8 @@
 </head>
 <body>
 
+<audio id="alarm-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
+
 <div id="home-screen">
     <h1>HOT 21</h1>
     <div class="subtitle">STREAK CHALLENGE</div>
@@ -343,17 +342,17 @@
     let playerNames = { p1: "PLAYER 1", p2: "PLAYER 2" };
 
     const tasks = [
-        { text: "YOUR MISSION IS STANDING DOGGY STYLE (NOT ON BED)!", time: 300 },
-        { text: "YOUR MISSION IS 69 POSITION!", time: 300 },
-        { text: "YOUR MISSION IS MISSIONARY SEX!", time: 300 },
-        { text: "YOUR MISSION IS COWGIRL SEX!", time: 300 },
-        { text: "YOUR MISSION IS SEX WITH THE GIRL'S LEGS ON THE BOY'S SHOULDERS!", time: 300 },
-        { text: "YOUR MISSION IS SEX ON A CHAIR!", time: 300 },
-        { text: "YOUR MISSION IS HANDCUFF THE LOSER AND DO AS YOU WISH!", time: 300 },
-        { text: "YOUR MISSION IS DOGGY STYLE ON THE BED!", time: 300 },
-        { text: "YOUR MISSION IS BLINDFOLD THE LOSER AND DO AS YOU WISH!", time: 300 },
-        { text: "YOUR MISSION IS MASSAGE THE WINNER!", time: 300 },
-        { text: "YOUR MISSION IS BLOWJOB TO THE WINNER!", time: 300 },
+        { text: "YOUR MISSION IS STANDING DOGGY STYLE (NOT ON BED)!", time: 20 },
+        { text: "YOUR MISSION IS 69 POSITION!", time: 20 },
+        { text: "YOUR MISSION IS MISSIONARY SEX!", time: 20 },
+        { text: "YOUR MISSION IS COWGIRL SEX!", time: 20 },
+        { text: "YOUR MISSION IS SEX WITH THE GIRL'S LEGS ON THE BOY'S SHOULDERS!", time: 20 },
+        { text: "YOUR MISSION IS SEX ON A CHAIR!", time: 20 },
+        { text: "YOUR MISSION IS HANDCUFF THE LOSER AND DO AS YOU WISH!", time: 20 },
+        { text: "YOUR MISSION IS DOGGY STYLE ON THE BED!", time: 20 },
+        { text: "YOUR MISSION IS BLINDFOLD THE LOSER AND DO AS YOU WISH!", time: 20 },
+        { text: "YOUR MISSION IS MASSAGE THE WINNER!", time: 20 },
+        { text: "YOUR MISSION IS BLOWJOB TO THE WINNER!", time: 20 },
         { text: "YOUR MISSION IS KISS THE WINNER'S NECK!", time: 180 },
         { text: "YOUR MISSION IS HANDJOB TO THE WINNER!", time: 180 },
         { text: "YOUR MISSION IS TAKE AN ALCOHOL SHOT!", time: 60 },
@@ -509,14 +508,35 @@
         }, 1800);
     }
 
+    // פונקציית טיימר משופרת - "חסינת תקלות"
     function beginTimer() {
         document.getElementById('timer-start-btn').style.display = 'none';
         document.getElementById('done-btn').style.display = 'block';
+        
+        const alarm = document.getElementById('alarm-sound');
+        
+        // "פתיחת" הסאונד עבור הדפדפן - מנגן שניה בשקט כדי לקבל אישור
+        alarm.play().then(() => {
+            alarm.pause();
+            alarm.currentTime = 0;
+        }).catch(e => console.log("Audio waiting for interaction"));
+
         if(rewardInterval) clearInterval(rewardInterval);
+        
         rewardInterval = setInterval(() => {
             if (--currentTimeLeft < 0) { 
                 clearInterval(rewardInterval); 
                 document.getElementById('timer').textContent = "DONE!"; 
+                
+                // ניסיון השמעה אגרסיבי
+                alarm.muted = false;
+                alarm.play();
+                
+                // פקודת רטט חוזרת
+                if ("vibrate" in navigator) {
+                    // רטט מקוטע שעובד טוב יותר במובייל
+                    navigator.vibrate([500, 200, 500, 200, 500, 200, 800]); 
+                }
             } else { 
                 document.getElementById('timer').textContent = `${Math.floor(currentTimeLeft/60).toString().padStart(2,'0')}:${(currentTimeLeft%60).toString().padStart(2,'0')}`; 
             }
@@ -524,6 +544,11 @@
     }
 
     function closeReward() {
+        // עצירת הסאונד אם הוא מנגן
+        const alarm = document.getElementById('alarm-sound');
+        alarm.pause();
+        alarm.currentTime = 0;
+
         clearInterval(rewardInterval);
         streaks = { p1: 0, p2: 0 };
         roundCount = 0;

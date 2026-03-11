@@ -341,9 +341,10 @@
     let roundCount = 0, currentTimeLeft = 0, rewardInterval;
     let playerNames = { p1: "PLAYER 1", p2: "PLAYER 2" };
     
-    // יצירת אובייקט אודיו לצלצול
+    // יצירת אובייקטים לאודיו
     const alarmSound = new Audio("https://actions.google.com/sounds/v1/alarms/phone_ringing_loop.ogg");
     alarmSound.loop = true;
+    const clickSound = new Audio("https://www.soundjay.com/buttons/button-16.mp3");
 
     const tasks = [
         { text: "YOUR MISSION IS STANDING DOGGY STYLE (NOT ON BED)!", time: 300 },
@@ -365,8 +366,9 @@
     ];
 
     function initGame() {
-        // טעינת הסאונד בלחיצה הראשונה (דרישה של iOS)
-        alarmSound.load();
+        // "דריכת" האודיו לאייפון
+        alarmSound.play().then(() => { alarmSound.pause(); alarmSound.currentTime = 0; }).catch(() => {});
+        clickSound.play().then(() => { clickSound.pause(); clickSound.currentTime = 0; }).catch(() => {});
         
         playerNames.p1 = document.getElementById('p1-name-input').value.trim() || "PLAYER 1";
         playerNames.p2 = document.getElementById('p2-name-input').value.trim() || "PLAYER 2";
@@ -516,11 +518,11 @@
     }
 
     function beginTimer() {
+        clickSound.currentTime = 0;
+        clickSound.play().catch(() => {});
         document.getElementById('timer-start-btn').style.display = 'none';
         document.getElementById('done-btn').style.display = 'block';
-        
         if(rewardInterval) clearInterval(rewardInterval);
-        
         rewardInterval = setInterval(() => {
             if (--currentTimeLeft < 0) { 
                 clearInterval(rewardInterval); 
@@ -532,14 +534,9 @@
         }, 1000);
     }
 
-    // פונקציית הפעלת הצלצול
     function startAlarm() {
-        alarmSound.play().catch(e => console.log("Audio play failed", e));
-        
-        // עצירה אוטומטית אחרי 30 שניות אם לא לחצו על הכפתור
-        setTimeout(() => {
-            stopAlarm();
-        }, 30000);
+        alarmSound.play().catch(() => {});
+        setTimeout(() => stopAlarm(), 30000);
     }
 
     function stopAlarm() {
@@ -550,7 +547,6 @@
     function closeReward() {
         stopAlarm();
         clearInterval(rewardInterval);
-        
         streaks = { p1: 0, p2: 0 };
         roundCount = 0;
         p1Hand = []; p2Hand = [];

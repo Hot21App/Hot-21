@@ -55,6 +55,16 @@
             cursor: pointer;
         }
 
+        /* Age Verification Styles */
+        #age-gate {
+            position: fixed; inset: 0; background: var(--bg); z-index: 50000;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 40px; text-align: center; transition: 0.5s;
+        }
+        .gate-content { max-width: 400px; }
+        .gate-icon { font-size: 4rem; margin-bottom: 20px; }
+        .gate-text { font-size: 0.9rem; color: #ccc; line-height: 1.6; margin: 20px 0; text-transform: none; }
+
         input {
             -webkit-user-select: text;
             user-select: text;
@@ -256,6 +266,20 @@
 </head>
 <body ontouchstart=""> 
 
+<div id="age-gate">
+    <div class="gate-content">
+        <div class="gate-icon">🔞</div>
+        <h1>ADULT CONTENT</h1>
+        <p class="gate-text">
+            This game contains adult themes, sexual missions, and explicit language. 
+            By entering, you confirm you are <strong>18 years or older</strong> and that all participants 
+            will play with <strong>full mutual consent</strong>.
+        </p>
+        <button class="btn-main" style="width: 100%; margin-bottom: 15px;" onclick="verifyAge()">I AM 18+ (ENTER)</button>
+        <button class="btn-sub" style="width: 100%; font-size: 0.9rem;" onclick="location.href='https://google.com'">LEAVE SITE</button>
+    </div>
+</div>
+
 <div id="home-screen">
     <h1>HOT 21</h1>
     <div class="subtitle">STREAK CHALLENGE</div>
@@ -335,6 +359,22 @@
 </div>
 
 <script>
+    // --- LEGAL & PERSISTENCE LOGIC ---
+    window.addEventListener('load', () => {
+        if (localStorage.getItem('hot21_age_verified') === 'true') {
+            document.getElementById('age-gate').style.display = 'none';
+        }
+    });
+
+    function verifyAge() {
+        localStorage.setItem('hot21_age_verified', 'true');
+        document.getElementById('age-gate').style.opacity = '0';
+        setTimeout(() => {
+            document.getElementById('age-gate').style.display = 'none';
+        }, 500);
+    }
+    // ---------------------------------
+
     const cardBaseURL = "https://deckofcardsapi.com/static/img/";
     const suits = ['H', 'D', 'C', 'S'], vals = ['2','3','4','5','6','7','8','9','0','J','Q','K','A'];
     let deck = [], p1Hand = [], p2Hand = [], streaks = { p1: 0, p2: 0 }, currentPlayer = 1, gameOver = false, roundWinner = null;
@@ -579,4 +619,3 @@
 </script>
 </body>
 </html>
-

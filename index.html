@@ -360,7 +360,7 @@
 </div>
 
 <script>
-    // --- מנגנון חסימה מיידי ---
+    // --- מנגנון חסימה מיידי (מעודכן לגישה נוחה בטלפון) ---
     (function blockUnauthorized() {
         if (localStorage.getItem('device_registered') === 'true') {
             return;
@@ -369,6 +369,13 @@
         if (urlParams.get('authorized') === 'true') {
             localStorage.setItem('device_registered', 'true');
             window.history.replaceState({}, document.title, window.location.pathname);
+            return;
+        }
+        
+        // בקשת קוד במידה ואין מפתח בכתובת
+        const pass = prompt("נא להזין קוד גישה:");
+        if (pass === "1234") { 
+            localStorage.setItem('device_registered', 'true');
         } else {
             document.documentElement.innerHTML = `
                 <body style="background:#000; color:red; display:flex; align-items:center; justify-content:center; height:100vh; font-family:sans-serif; text-align:center; padding:20px;">

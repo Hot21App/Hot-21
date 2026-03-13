@@ -627,15 +627,27 @@
     }
 
     function deviceLockCheck() {
-        // בודק אם המכשיר כבר "רשום"
-        if (localStorage.getItem('device_registered') === 'true') {
-            return true;
-        }
-        
-        // אם זו פעם ראשונה, נרשום את המכשיר
-        localStorage.setItem('device_registered', 'true');
+    // 1. אם המכשיר כבר רשום בזיכרון המקומי - תן לו להיכנס
+    if (localStorage.getItem('device_registered') === 'true') {
         return true;
     }
+    
+    // 2. אם זה מכשיר חדש, נבדוק אם הוא הגיע עם "מפתח כניסה" מדף המכירה
+    const urlParams = new URLSearchParams(window.location.search);
+    const hasKey = urlParams.get('authorized') === 'true';
+
+    if (hasKey) {
+        // המשתמש הגיע מדף המכירה! נרשום את המכשיר שלו לתמיד
+        localStorage.setItem('device_registered', 'true');
+        return true;
+    } else {
+        // 3. חסימה: המשתמש ניסה להיכנס ישירות ללינק בלי לשלם
+        alert("גישה נדחתה. יש להיכנס דרך הקישור הרשמי שקיבלת.");
+        document.body.innerHTML = "<h1 style='color:white; text-align:center; margin-top:50px;'>Access Denied</h1>";
+        return false;
+    }
+}
 </script>
 </body>
 </html>
+
